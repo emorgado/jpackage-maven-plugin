@@ -30,7 +30,7 @@
   <properties>
 
     <!-- Maven -->
-    <version.maven>3.8.6</version.maven>
+    <version.maven>3.9.8</version.maven>
 
     <!-- Java -->
     <javaVersion>9</javaVersion>
@@ -162,7 +162,7 @@
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
       <version>${version.maven}</version>
-      <scope>provided</scope>      
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
