@@ -19,6 +19,10 @@ package ru.akman.maven.plugins.jpackage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -569,6 +573,13 @@ public class JPackageMojo extends BaseToolMojo {
   private File licensefile;
 
   /**
+   * URL of the application's home page.
+   * <p>The jpackage CLI is: <code>--about-url https://site.com</code></p>
+   */
+  @Parameter
+  private String abouturl;
+
+  /**
    * Specifies the location of a resources directory that override
    * jpackage resources. Icons, template files, and other resources
    * of jpackage can be overridden by adding replacement resources
@@ -1048,6 +1059,21 @@ public class JPackageMojo extends BaseToolMojo {
             licensefile.toString()), ex);
       }
     }
+
+    // abouturl
+    if (abouturl != null) {
+      opt = cmdLine.createOpt();
+      opt.createArg().setValue("--about-url");
+      try {
+        new URI(abouturl).toURL();
+        opt.createArg().setValue(abouturl);
+      } catch (MalformedURLException | URISyntaxException ex) {
+        throw new MojoExecutionException(MessageFormat.format(
+            ERROR_RESOLVE,
+            "--about-url",
+            abouturl), ex);
+      }
+    }
     // resourcedir
     if (resourcedir != null) {
       opt = cmdLine.createOpt();
@@ -1280,7 +1306,7 @@ public class JPackageMojo extends BaseToolMojo {
     // SCOPE_SYSTEM   - This scope is similar to provided except that you
     //                  have to provide the JAR which contains it explicitly.
     //                  The artifact is always available and is not looked up
-    //                  in a repository.    
+    //                  in a repository.
     // SCOPE_RUNTIME  - This scope indicates that the dependency is not
     //                  required for compilation, but is for execution.
     //                  It is in the runtime and test classpaths, but not
